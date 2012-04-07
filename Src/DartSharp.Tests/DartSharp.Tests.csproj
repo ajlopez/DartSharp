@@ -38,6 +38,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

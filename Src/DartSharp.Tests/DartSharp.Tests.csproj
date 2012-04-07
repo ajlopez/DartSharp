@@ -38,10 +38,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\NullCommandTests.cs" />
     <Compile Include="Commands\ExpressionCommandTests.cs" />
     <Compile Include="Commands\SetVariableCommandTests.cs" />
     <Compile Include="Compiler\LexerTests.cs" />
+    <Compile Include="Expressions\CallExpressionTests.cs" />
+    <Compile Include="Expressions\ParserTests.cs" />
     <Compile Include="ContextTests.cs" />
+    <Compile Include="Expressions\ComparisonExpressionsTests.cs" />
     <Compile Include="Expressions\ConstantExpressionTests.cs" />
     <Compile Include="Expressions\VariableExpressionTests.cs" />
     <Compile Include="Functions\PrintTests.cs" />

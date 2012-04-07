@@ -9,7 +9,7 @@
     public class Lexer
     {
         private static string[] operators = { "=", "==" };
-        private static string separators = ";(),";
+        private static string separators = ";(),{}";
 
         private Stack<int> characters = new Stack<int>();
 

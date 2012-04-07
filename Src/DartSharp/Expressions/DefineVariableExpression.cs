@@ -24,6 +24,8 @@
 
         public string Name { get { return this.name; } }
 
+        public IExpression Expression { get { return this.expression; } }
+
         public object Evaluate(Context context)
         {
             context.DefineVariable(this.name);

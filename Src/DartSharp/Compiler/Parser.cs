@@ -65,6 +65,9 @@
                 case TokenType.Name:
                     string name = token.Value;
 
+                    if (name == "var")
+                        return this.ParseDefineVariableExpression();
+
                     token = this.NextToken();
 
                     if (token != null && token.Type == TokenType.Separator && token.Type == TokenType.Separator && token.Value == "(")
@@ -142,6 +145,12 @@
             return command;;
         }
 
+        private IExpression ParseDefineVariableExpression()
+        {
+            string name = this.ParseName();
+            return new DefineVariableExpression(name);
+        }
+
         private IEnumerable<IExpression> ParseArguments()
         {
             IList<IExpression> arguments = new List<IExpression>();
@@ -176,6 +185,16 @@
 
             if (token == null || token.Value != value || token.Type != type)
                 throw new ParserException(string.Format("Expected '{0}'", value));
+        }
+
+        private string ParseName()
+        {
+            Token token = this.NextToken();
+
+            if (token == null || token.Type != TokenType.Name)
+                throw new ParserException("Name expected");
+
+            return token.Value;
         }
 
         private Token NextToken()

@@ -40,10 +40,11 @@
   <ItemGroup>
     <Compile Include="Commands\ExpressionCommandTests.cs" />
     <Compile Include="Commands\SetVariableCommandTests.cs" />
+    <Compile Include="Compiler\LexerTests.cs" />
     <Compile Include="ContextTests.cs" />
     <Compile Include="Expressions\ConstantExpressionTests.cs" />
     <Compile Include="Expressions\VariableExpressionTests.cs" />
-    <Compile Include="Functions\PutTests.cs" />
+    <Compile Include="Functions\PrintTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

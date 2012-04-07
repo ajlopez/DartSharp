@@ -13,6 +13,7 @@ namespace DartSharp.Console
         static void Main(string[] args)
         {
             System.Console.WriteLine("DartSharp 0.0.0");
+
             Lexer lexer = new Lexer(System.Console.In);
             Context context = new Context();
             context.SetValue("print", new Print(System.Console.Out));
@@ -23,3 +24,4 @@ namespace DartSharp.Console
         }
     }
 }
+

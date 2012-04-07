@@ -42,6 +42,30 @@ namespace DartSharp.Tests
             parent.SetValue("One", 1);
             Assert.AreEqual(1, context.GetValue("One"));
         }
+
+        [TestMethod]
+        public void DefineAndHasVariable()
+        {
+            Context context = new Context();
+            Assert.IsFalse(context.HasVariable("a"));
+            context.DefineVariable("a");
+            Assert.IsTrue(context.HasVariable("a"));
+            Assert.IsNull(context.GetValue("a"));
+        }
+
+        [TestMethod]
+        public void DefineAndHasVariableInParent()
+        {
+            Context parent = new Context();
+            Context context = new Context(parent);
+
+            Assert.IsFalse(parent.HasVariable("a"));
+            Assert.IsFalse(context.HasVariable("a"));
+            parent.DefineVariable("a");
+            Assert.IsTrue(parent.HasVariable("a"));
+            Assert.IsTrue(context.HasVariable("a"));
+            Assert.IsNull(context.GetValue("a"));
+        }
     }
 }
 

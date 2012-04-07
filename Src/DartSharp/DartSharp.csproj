@@ -61,6 +61,7 @@
     <Compile Include="Expressions\CallExpression.cs" />
     <Compile Include="Expressions\CompareExpression.cs" />
     <Compile Include="Expressions\ConstantExpression.cs" />
+    <Compile Include="Expressions\DefineVariableExpression.cs" />
     <Compile Include="Expressions\IExpression.cs" />
     <Compile Include="Expressions\VariableExpression.cs" />
     <Compile Include="Language\ComparisonOperator.cs" />

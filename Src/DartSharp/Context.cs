@@ -34,5 +34,21 @@
             
             return this.values[name];
         }
+
+        public void DefineVariable(string name)
+        {
+            this.values[name] = null;
+        }
+
+        public bool HasVariable(string name)
+        {
+            if (this.values.ContainsKey(name))
+                return true;
+
+            if (this.parent != null)
+                return this.parent.HasVariable(name);
+
+            return false;
+        }
     }
 }

@@ -148,6 +148,12 @@
         private IExpression ParseDefineVariableExpression()
         {
             string name = this.ParseName();
+
+            Token token = this.NextToken();
+
+            if (token != null && token.Type == TokenType.Operator && token.Value == "=")
+                return new DefineVariableExpression(name, this.ParseExpression());
+
             return new DefineVariableExpression(name);
         }
 

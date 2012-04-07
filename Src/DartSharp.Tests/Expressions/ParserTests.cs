@@ -360,5 +360,35 @@ namespace DartSharp.Tests.Compiler
             Assert.AreEqual("a", dvexpr.Name);
             Assert.IsNull(dvexpr.Expression);
         }
+
+        [TestMethod]
+        public void ParseDefineVariableWithValue()
+        {
+            Parser parser = new Parser("var a = 1");
+            var result = parser.ParseExpression();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineVariableExpression));
+
+            DefineVariableExpression dvexpr = (DefineVariableExpression)result;
+            Assert.AreEqual("a", dvexpr.Name);
+            Assert.IsNotNull(dvexpr.Expression);
+            Assert.IsInstanceOfType(dvexpr.Expression, typeof(ConstantExpression));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseNameExpected()
+        {
+            Parser parser = new Parser("var 1");
+            parser.ParseExpression();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseNameExpectedAfterVar()
+        {
+            Parser parser = new Parser("var");
+            parser.ParseExpression();
+        }
     }
 }

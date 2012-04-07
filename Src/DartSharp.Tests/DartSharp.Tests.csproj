@@ -38,6 +38,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ExpressionCommandTests.cs" />
+    <Compile Include="Commands\SetVariableCommandTests.cs" />
     <Compile Include="ContextTests.cs" />
     <Compile Include="Expressions\ConstantExpressionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

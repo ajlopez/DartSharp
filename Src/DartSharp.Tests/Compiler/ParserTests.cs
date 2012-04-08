@@ -390,5 +390,19 @@ namespace DartSharp.Tests.Compiler
             Parser parser = new Parser("var");
             parser.ParseExpression();
         }
+
+        [TestMethod]
+        public void ParseCompositeCommand()
+        {
+            Parser parser = new Parser("{ a = 1; b = 2; }");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(CompositeCommand));
+
+            CompositeCommand command = (CompositeCommand)result;
+
+            Assert.AreEqual(2, command.Commands.Count());
+        }
     }
 }

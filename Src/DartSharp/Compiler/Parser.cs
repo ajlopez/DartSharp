@@ -116,6 +116,13 @@
             if (token.Type == TokenType.Separator && token.Value == ";")
                 return NullCommand.Instance;
 
+            if (token.Type == TokenType.Separator && token.Value == "{")
+            {
+                ICommand commands = new CompositeCommand(this.ParseCommands());
+                this.ParseToken("}", TokenType.Separator);
+                return commands;
+            }
+
             this.PushToken(token);
 
             IExpression expression = this.ParseExpression();

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using DartSharp.Functions;
 
     public class Context
     {
@@ -18,6 +19,8 @@
         {
             this.parent = parent;
         }
+
+        public ReturnValue ReturnValue { get; set; }
 
         public void SetValue(string name, object value)
         {

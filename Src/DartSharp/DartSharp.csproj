@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommand.cs" />
+    <Compile Include="Commands\ReturnCommand.cs" />
     <Compile Include="Commands\DefineFunctionCommand.cs" />
     <Compile Include="Commands\IfCommand.cs" />
     <Compile Include="Commands\NullCommand.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Expressions\ArithmeticBinaryExpression.cs" />
     <Compile Include="Expressions\ArithmeticUnaryExpression.cs" />
     <Compile Include="Expressions\UnaryExpression.cs" />
+    <Compile Include="Functions\ReturnValue.cs" />
     <Compile Include="Language\ArithmeticOperator.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\CallExpression.cs" />

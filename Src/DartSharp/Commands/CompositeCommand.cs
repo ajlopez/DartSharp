@@ -22,7 +22,11 @@
             object result = null;
 
             foreach (var command in this.commands)
+            {
                 result = command.Execute(context);
+                if (context.ReturnValue != null)
+                    return context.ReturnValue.Value;
+            }
 
             return result;
         }

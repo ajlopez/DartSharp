@@ -14,6 +14,7 @@ namespace DartSharp.Tests
         {
             Context context = new Context();
             Assert.IsNull(context.GetValue("Foo"));
+            Assert.IsNull(context.ReturnValue);
         }
 
         [TestMethod]

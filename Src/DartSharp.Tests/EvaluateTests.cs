@@ -39,6 +39,15 @@ namespace DartSharp.Tests
         }
 
         [TestMethod]
+        public void EvaluateSimpleReturn()
+        {
+            Context context = new Context();
+            EvaluateCommands("return 0;", context);
+            Assert.IsNotNull(context.ReturnValue);
+            Assert.AreEqual(0, context.ReturnValue.Value);
+        }
+
+        [TestMethod]
         public void EvaluateSimpleIfCommandWithElse()
         {
             Context context = new Context();
@@ -52,13 +61,41 @@ namespace DartSharp.Tests
         }
 
         [TestMethod]
-        public void EvaluateSimpleArithmetic()
+        public void EvaluateSimpleArithmeticExpressions()
         {
             Assert.AreEqual(2, EvaluateExpression("1+1", null));
             Assert.AreEqual(-1, EvaluateExpression("1-2", null));
             Assert.AreEqual(6, EvaluateExpression("2*3", null));
             Assert.AreEqual(3.0, EvaluateExpression("6/2", null));
             Assert.AreEqual(10, EvaluateExpression("(2+3)*2", null));
+        }
+
+        [TestMethod]
+        public void EvaluateSimpleCompareExpressions()
+        {
+            Assert.AreEqual(true, EvaluateExpression("1==1", null));
+            Assert.AreEqual(true, EvaluateExpression("1<2", null));
+            Assert.AreEqual(false, EvaluateExpression("1<1", null));
+            Assert.AreEqual(true, EvaluateExpression("1<=2", null));
+            Assert.AreEqual(true, EvaluateExpression("1<=1", null));
+            Assert.AreEqual(false, EvaluateExpression("1>=2", null));
+            Assert.AreEqual(true, EvaluateExpression("1>=1", null));
+        }
+
+        [TestMethod]
+        public void EvaluateSimpleFunctionCall()
+        {
+            Context context = new Context();
+            EvaluateCommands("int foo() { return 1; } a = foo();", context);
+            Assert.AreEqual(1, context.GetValue("a"));
+        }
+
+        [TestMethod]
+        public void EvaluateSimpleFunctionCallWithArgument()
+        {
+            Context context = new Context();
+            EvaluateCommands("int inc(int n) { return n+1; } a = inc(1);", context);
+            Assert.AreEqual(2, context.GetValue("a"));
         }
 
         private static object EvaluateExpression(string text, Context context)

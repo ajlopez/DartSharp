@@ -104,6 +104,24 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
+        public void ParseLessOperator()
+        {
+            Parser parser = new Parser("a < 1");
+            IExpression expr = parser.ParseExpression();
+
+            Assert.IsNotNull(expr);
+            Assert.IsInstanceOfType(expr, typeof(CompareExpression));
+
+            CompareExpression cexpr = (CompareExpression)expr;
+
+            Assert.AreEqual(ComparisonOperator.Less, cexpr.Operation);
+            Assert.IsInstanceOfType(cexpr.LeftExpression, typeof(VariableExpression));
+            Assert.IsInstanceOfType(cexpr.RightExpression, typeof(ConstantExpression));
+
+            Assert.IsNull(parser.ParseExpression());
+        }
+
+        [TestMethod]
         public void ParseSimpleCallWithParenthesisAndTwoArguments()
         {
             Parser parser = new Parser("myfunc(a, b)");
@@ -432,6 +450,40 @@ namespace DartSharp.Tests.Compiler
             DefineFunctionCommand command = (DefineFunctionCommand)result;
 
             Assert.AreEqual("myfun", command.Name);
+            Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
+        }
+
+        [TestMethod]
+        public void ParseIntFunctionDefinitionWithParameter()
+        {
+            Parser parser = new Parser("int myfun(int a) { return a+1; }");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineFunctionCommand));
+
+            DefineFunctionCommand command = (DefineFunctionCommand)result;
+
+            Assert.AreEqual("myfun", command.Name);
+            Assert.IsNotNull(command.ArgumentNames);
+            Assert.AreEqual(1, command.ArgumentNames.Count());
+            Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
+        }
+
+        [TestMethod]
+        public void ParseIntFunctionDefinitionWithTwoParameters()
+        {
+            Parser parser = new Parser("int myfun(int a, int b) { return a+b; }");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineFunctionCommand));
+
+            DefineFunctionCommand command = (DefineFunctionCommand)result;
+
+            Assert.AreEqual("myfun", command.Name);
+            Assert.IsNotNull(command.ArgumentNames);
+            Assert.AreEqual(2, command.ArgumentNames.Count());
             Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
         }
 

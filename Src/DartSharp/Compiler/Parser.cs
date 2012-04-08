@@ -37,8 +37,19 @@
             if (token == null)
                 return expression;
 
-            if (token.Type == TokenType.Operator && token.Value == "==")
-                return new CompareExpression(ComparisonOperator.Equal, expression, this.ParseExpression());
+            if (token.Type == TokenType.Operator)
+            {
+                if (token.Value == "==")
+                    return new CompareExpression(ComparisonOperator.Equal, expression, this.ParseExpression());
+                if (token.Value == "<")
+                    return new CompareExpression(ComparisonOperator.Less, expression, this.ParseExpression());
+                if (token.Value == ">")
+                    return new CompareExpression(ComparisonOperator.Greater, expression, this.ParseExpression());
+                if (token.Value == "<=")
+                    return new CompareExpression(ComparisonOperator.LessEqual, expression, this.ParseExpression());
+                if (token.Value == ">=")
+                    return new CompareExpression(ComparisonOperator.GreaterEqual, expression, this.ParseExpression());
+            }
 
             this.PushToken(token);
 
@@ -189,6 +200,13 @@
                 if (token.Value == "if")
                     return this.ParseIfCommand();
 
+                if (token.Value == "return")
+                {
+                    var expr = this.ParseExpression();
+                    this.ParseToken(";", TokenType.Separator);
+                    return new ReturnCommand(expr);
+                }
+
                 if (token.Value == "void")
                     return this.ParseDefineFunction(this.ParseName());
 
@@ -293,7 +311,29 @@
 
             IList<string> arguments = new List<string>();
 
-            this.ParseToken(")", TokenType.Separator);
+            Token token = this.NextToken();
+
+            while (token != null && token.Type == TokenType.Name)
+            {
+                if (!this.IsType(token.Value))
+                    throw new ParserException(string.Format("Unexpected '{0}'", token.Value));
+                
+                string name = this.ParseName();
+                arguments.Add(name);
+
+                token = this.NextToken();
+
+                if (token != null && token.Type == TokenType.Separator && token.Value == ")")
+                    break;
+
+                if (token == null || token.Type != TokenType.Separator || token.Value != ",")
+                    throw new ParserException("Expected ',' or ')'");
+
+                token = this.NextToken();
+            }
+
+            if (token == null || token.Type != TokenType.Separator || token.Value != ")")
+                throw new ParserException("Expected ')'");
 
             return arguments;
         }

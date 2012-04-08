@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Commands\CompositeCommand.cs" />
     <Compile Include="Commands\DefineFunctionCommand.cs" />
+    <Compile Include="Commands\IfCommand.cs" />
     <Compile Include="Commands\NullCommand.cs" />
     <Compile Include="Commands\ExpressionCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Functions\DefinedFunction.cs" />
     <Compile Include="Language\ComparisonOperator.cs" />
     <Compile Include="Language\ICallable.cs" />
+    <Compile Include="Language\Predicates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Functions\Print.cs" />
   </ItemGroup>

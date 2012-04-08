@@ -33,7 +33,7 @@ namespace DartSharp.Tests
             Print print = new Print(writer);
             context.SetValue("print", print);
             context.SetValue("a", 0);
-            EvaluateCommands("if (a == 0) print('Hello, world');", context);
+            EvaluateCommands("if (a == 0) print('Hello, world');\r\n", context);
             writer.Close();
             Assert.AreEqual("Hello, world\r\n", writer.ToString());
         }

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CompositeCommand.cs" />
     <Compile Include="Commands\NullCommand.cs" />
     <Compile Include="Commands\ExpressionCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />

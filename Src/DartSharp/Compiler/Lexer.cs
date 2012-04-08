@@ -8,7 +8,7 @@
 
     public class Lexer
     {
-        private static string[] operators = { "=", "==" };
+        private static string[] operators = { "=", "==", "+", "-", "*", "/" };
         private static string separators = ";(),{}";
 
         private Stack<int> characters = new Stack<int>();
@@ -117,6 +117,32 @@
         }
 
         private int NextChar()
+        {
+            int ich = this.NextSimpleChar();
+
+            if (ich < 0)
+                return ich;
+
+            char ch = (char)ich;
+
+            if (ch != '/')
+                return ich;
+
+            int ich2 = this.NextSimpleChar();
+
+            if (ich2 < 0 || ((char)ich2) != '/')
+            {
+                this.PushChar(ich2);
+                return ich;
+            }
+
+            for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '\r' && ((char)ich) != '\n'; ich = this.NextSimpleChar())
+                ;
+
+            return ich;
+        }
+
+        private int NextSimpleChar()
         {
             if (this.characters.Count > 0)
                 return this.characters.Pop();

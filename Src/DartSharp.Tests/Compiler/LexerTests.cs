@@ -37,6 +37,19 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
+        public void GetNameWithLineComment()
+        {
+            Lexer lexer = new Lexer("  foo  // Foo Variable ");
+            Token token = lexer.NextToken();
+
+            Assert.IsNotNull(token);
+            Assert.AreEqual("foo", token.Value);
+            Assert.AreEqual(TokenType.Name, token.Type);
+
+            Assert.IsNull(lexer.NextToken());
+        }
+
+        [TestMethod]
         public void GetAssignmentOperator()
         {
             Lexer lexer = new Lexer("=");
@@ -44,6 +57,19 @@ namespace DartSharp.Tests.Compiler
 
             Assert.IsNotNull(token);
             Assert.AreEqual("=", token.Value);
+            Assert.AreEqual(TokenType.Operator, token.Type);
+
+            Assert.IsNull(lexer.NextToken());
+        }
+
+        [TestMethod]
+        public void GetDivideOperator()
+        {
+            Lexer lexer = new Lexer("/");
+            Token token = lexer.NextToken();
+
+            Assert.IsNotNull(token);
+            Assert.AreEqual("/", token.Value);
             Assert.AreEqual(TokenType.Operator, token.Type);
 
             Assert.IsNull(lexer.NextToken());

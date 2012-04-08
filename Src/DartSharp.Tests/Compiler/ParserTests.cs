@@ -404,5 +404,29 @@ namespace DartSharp.Tests.Compiler
 
             Assert.AreEqual(2, command.Commands.Count());
         }
+
+        [TestMethod]
+        public void ParseFunctionDefinition()
+        {
+            Parser parser = new Parser("main() { a = 1; b = 2; }");
+            var result = parser.ParseTopCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineFunctionCommand));
+
+            DefineFunctionCommand command = (DefineFunctionCommand)result;
+
+            Assert.AreEqual("main", command.Name);
+            Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
+        }
+
+        [TestMethod]
+        public void ParseDefineVariableAsTopCommand()
+        {
+            Parser parser = new Parser("var a = 1;");
+            var result = parser.ParseTopCommand();
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ExpressionCommand));
+        }
     }
 }

@@ -106,6 +106,18 @@
             return commands;
         }
 
+        public ICommand ParseTopCommand()
+        {
+            Token token = this.NextToken();
+
+            if (token.Type == TokenType.Name && this.TryParseToken("(", TokenType.Separator))
+                return this.ParseDefineFunction(token.Value);
+
+            this.PushToken(token);
+
+            return ParseCommand();
+        }
+
         public ICommand ParseCommand()
         {
             Token token = this.NextToken();
@@ -152,6 +164,13 @@
             return command;;
         }
 
+        private DefineFunctionCommand ParseDefineFunction(string name)
+        {
+            IList<string> argnames = this.ParseArgumentNames();
+            ICommand body = this.ParseCommand();
+            return new DefineFunctionCommand(name, argnames, body);
+        }
+
         private IExpression ParseDefineVariableExpression()
         {
             string name = this.ParseName();
@@ -176,6 +195,15 @@
                     this.ParseToken(",", TokenType.Separator);
                 arguments.Add(this.ParseExpression());
             }
+
+            return arguments;
+        }
+
+        private IList<string> ParseArgumentNames()
+        {
+            IList<string> arguments = new List<string>();
+
+            this.ParseToken(")", TokenType.Separator);
 
             return arguments;
         }

@@ -1,22 +1,23 @@
-﻿namespace DartSharp.Expressions
+﻿namespace DartSharp.Commands
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using DartSharp.Language;
+    using DartSharp.Expressions;
 
-    public class DefineVariableExpression : IExpression
+    public class DefineVariableCommand : ICommand
     {
         private string name;
         private IExpression expression;
 
-        public DefineVariableExpression(string name)
+        public DefineVariableCommand(string name)
             : this(name, null)
         {
         }
 
-        public DefineVariableExpression(string name, IExpression expression)
+        public DefineVariableCommand(string name, IExpression expression)
         {
             this.name = name;
             this.expression = expression;
@@ -26,7 +27,7 @@
 
         public IExpression Expression { get { return this.expression; } }
 
-        public object Evaluate(Context context)
+        public object Execute(Context context)
         {
             context.DefineVariable(this.name);
 

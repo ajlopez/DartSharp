@@ -351,36 +351,36 @@ namespace DartSharp.Tests.Compiler
         [TestMethod]
         public void ParseDefineVariable()
         {
-            Parser parser = new Parser("var a");
-            var result = parser.ParseExpression();
+            Parser parser = new Parser("var a;");
+            var result = parser.ParseCommand();
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(DefineVariableExpression));
+            Assert.IsInstanceOfType(result, typeof(DefineVariableCommand));
 
-            DefineVariableExpression dvexpr = (DefineVariableExpression)result;
-            Assert.AreEqual("a", dvexpr.Name);
-            Assert.IsNull(dvexpr.Expression);
+            DefineVariableCommand dvcmd = (DefineVariableCommand)result;
+            Assert.AreEqual("a", dvcmd.Name);
+            Assert.IsNull(dvcmd.Expression);
         }
 
         [TestMethod]
         public void ParseDefineVariableWithValue()
         {
-            Parser parser = new Parser("var a = 1");
-            var result = parser.ParseExpression();
+            Parser parser = new Parser("var a = 1;");
+            var result = parser.ParseCommand();
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(DefineVariableExpression));
+            Assert.IsInstanceOfType(result, typeof(DefineVariableCommand));
 
-            DefineVariableExpression dvexpr = (DefineVariableExpression)result;
-            Assert.AreEqual("a", dvexpr.Name);
-            Assert.IsNotNull(dvexpr.Expression);
-            Assert.IsInstanceOfType(dvexpr.Expression, typeof(ConstantExpression));
+            DefineVariableCommand dvcmd = (DefineVariableCommand)result;
+            Assert.AreEqual("a", dvcmd.Name);
+            Assert.IsNotNull(dvcmd.Expression);
+            Assert.IsInstanceOfType(dvcmd.Expression, typeof(ConstantExpression));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ParserException))]
         public void RaiseNameExpected()
         {
-            Parser parser = new Parser("var 1");
-            parser.ParseExpression();
+            Parser parser = new Parser("var 1;");
+            parser.ParseCommand();
         }
 
         [TestMethod]
@@ -388,7 +388,7 @@ namespace DartSharp.Tests.Compiler
         public void RaiseNameExpectedAfterVar()
         {
             Parser parser = new Parser("var");
-            parser.ParseExpression();
+            parser.ParseCommand();
         }
 
         [TestMethod]
@@ -406,7 +406,7 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
-        public void ParseFunctionDefinition()
+        public void ParseVoidFunctionDefinition()
         {
             Parser parser = new Parser("void myfun() { a = 1; b = 2; }");
             var result = parser.ParseCommand();
@@ -417,6 +417,36 @@ namespace DartSharp.Tests.Compiler
             DefineFunctionCommand command = (DefineFunctionCommand)result;
 
             Assert.AreEqual("myfun", command.Name);
+            Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
+        }
+
+        [TestMethod]
+        public void ParseIntFunctionDefinition()
+        {
+            Parser parser = new Parser("int myfun() { a = 1; b = 2; }");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineFunctionCommand));
+
+            DefineFunctionCommand command = (DefineFunctionCommand)result;
+
+            Assert.AreEqual("myfun", command.Name);
+            Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
+        }
+
+        [TestMethod]
+        public void ParseMainFunctionDefinition()
+        {
+            Parser parser = new Parser("main() { a = 1; b = 2; }");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineFunctionCommand));
+
+            DefineFunctionCommand command = (DefineFunctionCommand)result;
+
+            Assert.AreEqual("main", command.Name);
             Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
         }
     }

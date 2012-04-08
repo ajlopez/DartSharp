@@ -11,6 +11,7 @@
 
     public class Parser
     {
+        private static string[] typenames = new string[] { "var", "void", "int", "String" };
         private Lexer lexer;
         private Stack<Token> tokens = new Stack<Token>();
 
@@ -65,9 +66,6 @@
                 case TokenType.Name:
                     string name = token.Value;
 
-                    if (name == "var")
-                        return this.ParseDefineVariableExpression();
-
                     token = this.NextToken();
 
                     if (token != null && token.Type == TokenType.Separator && token.Type == TokenType.Separator && token.Value == "(")
@@ -113,18 +111,37 @@
             if (token == null)
                 return null;
 
-            if (token.Type == TokenType.Separator && token.Value == ";")
-                return NullCommand.Instance;
-
-            if (token.Type == TokenType.Separator && token.Value == "{")
+            if (token.Type == TokenType.Separator)
             {
-                ICommand commands = new CompositeCommand(this.ParseCommands());
-                this.ParseToken("}", TokenType.Separator);
-                return commands;
+                if (token.Value == ";")
+                    return NullCommand.Instance;
+
+                if (token.Value == "{")
+                {
+                    ICommand commands = new CompositeCommand(this.ParseCommands());
+                    this.ParseToken("}", TokenType.Separator);
+                    return commands;
+                }
             }
 
-            if (token.Type == TokenType.Name && token.Value == "void")
-                return this.ParseDefineFunction();
+            if (token.Type == TokenType.Name)
+            {
+                if (token.Value == "void")
+                    return this.ParseDefineFunction(this.ParseName());
+
+                if (token.Value == "main")
+                    return this.ParseDefineFunction(token.Value);
+
+                if (this.IsType(token.Value))
+                {
+                    string name = this.ParseName();
+
+                    if (this.TryPeekToken("(", TokenType.Separator))
+                        return this.ParseDefineFunction(name);
+
+                    return this.ParseDefineVariableCommand(name);
+                }
+            }
 
             this.PushToken(token);
 
@@ -155,24 +172,25 @@
             return command;;
         }
 
-        private DefineFunctionCommand ParseDefineFunction()
+        private DefineFunctionCommand ParseDefineFunction(string name)
         {
-            string name = this.ParseName();
             IList<string> argnames = this.ParseArgumentNames();
             ICommand body = this.ParseCommand();
             return new DefineFunctionCommand(name, argnames, body);
         }
 
-        private IExpression ParseDefineVariableExpression()
+        private ICommand ParseDefineVariableCommand(string name)
         {
-            string name = this.ParseName();
+            DefineVariableCommand command;
 
-            Token token = this.NextToken();
+            if (this.TryParseToken("=", TokenType.Operator))
+                command = new DefineVariableCommand(name, this.ParseExpression());
+            else
+                command =  new DefineVariableCommand(name);
 
-            if (token != null && token.Type == TokenType.Operator && token.Value == "=")
-                return new DefineVariableExpression(name, this.ParseExpression());
+            this.ParseToken(";", TokenType.Separator);
 
-            return new DefineVariableExpression(name);
+            return command;
         }
 
         private IEnumerable<IExpression> ParseArguments()
@@ -214,6 +232,18 @@
             return false;
         }
 
+        private bool TryPeekToken(string value, TokenType type)
+        {
+            Token token = this.NextToken();
+
+            this.PushToken(token);
+
+            if (token != null && token.Value == value && token.Type == type)
+                return true;
+
+            return false;
+        }
+
         private void ParseToken(string value, TokenType type)
         {
             Token token = this.NextToken();
@@ -243,6 +273,11 @@
         private void PushToken(Token token)
         {
             this.tokens.Push(token);
+        }
+
+        private bool IsType(string name)
+        {
+            return typenames.Contains(name);
         }
     }
 }

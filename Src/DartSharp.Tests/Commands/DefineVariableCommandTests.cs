@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DartSharp.Expressions;
+using DartSharp.Commands;
 
-namespace DartSharp.Tests.Expressions
+namespace DartSharp.Tests.Commands
 {
     [TestClass]
-    public class DefineVariableExpressionTests
+    public class DefineVariableCommandTests
     {
         [TestMethod]
         public void DefineVariable()
         {
             Context context = new Context();
-            DefineVariableExpression expr = new DefineVariableExpression("a");
+            DefineVariableCommand expr = new DefineVariableCommand("a");
 
-            Assert.IsNull(expr.Evaluate(context));
+            Assert.IsNull(expr.Execute(context));
             Assert.IsTrue(context.HasVariable("a"));
             Assert.IsNull(context.GetValue("a"));
             Assert.AreEqual("a", expr.Name);
@@ -26,9 +27,9 @@ namespace DartSharp.Tests.Expressions
         public void DefineVariableWithInitialValue()
         {
             Context context = new Context();
-            DefineVariableExpression expr = new DefineVariableExpression("a", new ConstantExpression(1));
+            DefineVariableCommand expr = new DefineVariableCommand("a", new ConstantExpression(1));
 
-            Assert.AreEqual(1, expr.Evaluate(context));
+            Assert.AreEqual(1, expr.Execute(context));
             Assert.IsTrue(context.HasVariable("a"));
             Assert.AreEqual(1, context.GetValue("a"));
             Assert.AreEqual("a", expr.Name);

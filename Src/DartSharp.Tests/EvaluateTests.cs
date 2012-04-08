@@ -51,6 +51,26 @@ namespace DartSharp.Tests
             Assert.AreEqual("Hello, world\r\n", writer.ToString());
         }
 
+        [TestMethod]
+        public void EvaluateSimpleArithmetic()
+        {
+            Assert.AreEqual(2, EvaluateExpression("1+1", null));
+            Assert.AreEqual(-1, EvaluateExpression("1-2", null));
+            Assert.AreEqual(6, EvaluateExpression("2*3", null));
+            Assert.AreEqual(3.0, EvaluateExpression("6/2", null));
+        }
+
+        private static object EvaluateExpression(string text, Context context)
+        {
+            Parser parser = new Parser(text);
+
+            var result = parser.ParseExpression();
+
+            Assert.IsNull(parser.ParseExpression());
+
+            return result.Evaluate(context);
+        }
+
         private static void EvaluateCommands(string text, Context context)
         {
             Parser parser = new Parser(text);

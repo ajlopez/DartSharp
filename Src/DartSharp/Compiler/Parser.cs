@@ -27,7 +27,7 @@
 
         public IExpression ParseExpression()
         {
-            var expression = this.ParseSimpleExpression();
+            var expression = this.ParseBinaryExpressionLevelMultiply();
 
             if (expression == null)
                 return null;
@@ -41,6 +41,50 @@
                 return new CompareExpression(ComparisonOperator.Equal, expression, this.ParseExpression());
 
             this.PushToken(token);
+
+            return expression;
+        }
+
+        private IExpression ParseBinaryExpressionLevelMultiply()
+        {
+            IExpression expression = this.ParseBinaryExpressionLevelAdd();
+
+            if (expression == null)
+                return null;
+
+            Token token = this.NextToken();
+
+            while (token != null && token.Type == TokenType.Operator && (token.Value == "*" || token.Value == "/"))
+            {
+                ArithmeticOperator oper = (token.Value == "*" ? ArithmeticOperator.Multiply : ArithmeticOperator.Divide);
+                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseBinaryExpressionLevelAdd());
+                token = this.NextToken();
+            }
+
+            if (token != null)
+                this.PushToken(token);
+
+            return expression;
+        }
+
+        private IExpression ParseBinaryExpressionLevelAdd()
+        {
+            IExpression expression = this.ParseSimpleExpression();
+
+            if (expression == null)
+                return null;
+
+            Token token = this.NextToken();
+
+            while (token != null && token.Type == TokenType.Operator && (token.Value == "+" || token.Value == "-"))
+            {
+                ArithmeticOperator oper = (token.Value == "+" ? ArithmeticOperator.Add : ArithmeticOperator.Subtract);
+                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseSimpleExpression());
+                token = this.NextToken();
+            }
+
+            if (token != null)
+                this.PushToken(token);
 
             return expression;
         }

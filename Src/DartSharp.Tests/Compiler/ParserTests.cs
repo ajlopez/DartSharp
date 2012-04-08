@@ -507,5 +507,21 @@ namespace DartSharp.Tests.Compiler
 
             Assert.AreEqual(true, expression.Value);
         }
+
+        [TestMethod]
+        public void ParseSimpleSum()
+        {
+            Parser parser = new Parser("1+2");
+            var result = parser.ParseExpression();
+            Assert.IsNull(parser.ParseExpression());
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ArithmeticBinaryExpression));
+
+            ArithmeticBinaryExpression expression = (ArithmeticBinaryExpression)result;
+
+            Assert.IsInstanceOfType(expression.LeftExpression, typeof(ConstantExpression));
+            Assert.IsInstanceOfType(expression.RightExpression, typeof(ConstantExpression));
+        }
     }
 }

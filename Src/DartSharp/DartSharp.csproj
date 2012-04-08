@@ -60,6 +60,10 @@
     <Compile Include="Compiler\Token.cs" />
     <Compile Include="Compiler\TokenType.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="Expressions\ArithmeticBinaryExpression.cs" />
+    <Compile Include="Expressions\ArithmeticUnaryExpression.cs" />
+    <Compile Include="Expressions\UnaryExpression.cs" />
+    <Compile Include="Language\ArithmeticOperator.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\CallExpression.cs" />
     <Compile Include="Expressions\CompareExpression.cs" />
@@ -70,7 +74,9 @@
     <Compile Include="Functions\DefinedFunction.cs" />
     <Compile Include="Language\ComparisonOperator.cs" />
     <Compile Include="Language\ICallable.cs" />
+    <Compile Include="Language\IObject.cs" />
     <Compile Include="Language\Predicates.cs" />
+    <Compile Include="ObjectUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Functions\Print.cs" />
   </ItemGroup>

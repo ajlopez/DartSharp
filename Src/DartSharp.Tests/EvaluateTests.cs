@@ -58,6 +58,7 @@ namespace DartSharp.Tests
             Assert.AreEqual(-1, EvaluateExpression("1-2", null));
             Assert.AreEqual(6, EvaluateExpression("2*3", null));
             Assert.AreEqual(3.0, EvaluateExpression("6/2", null));
+            Assert.AreEqual(10, EvaluateExpression("(2+3)*2", null));
         }
 
         private static object EvaluateExpression(string text, Context context)

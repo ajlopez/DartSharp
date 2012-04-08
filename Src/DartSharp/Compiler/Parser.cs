@@ -134,6 +134,15 @@
 
                 case TokenType.String:
                     return new ConstantExpression(token.Value);
+
+                case TokenType.Separator:
+                    if (token.Value == "(")
+                    {
+                        var result = this.ParseExpression();
+                        this.ParseToken(")", TokenType.Separator);
+                        return result;
+                    }
+                    break;
             }
 
             throw new ParserException(string.Format("Unexpected '{0}'", token.Value));

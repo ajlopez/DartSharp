@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommand.cs" />
+    <Compile Include="Commands\DefineFunctionCommand.cs" />
     <Compile Include="Commands\NullCommand.cs" />
     <Compile Include="Commands\ExpressionCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Expressions\DefineVariableExpression.cs" />
     <Compile Include="Expressions\IExpression.cs" />
     <Compile Include="Expressions\VariableExpression.cs" />
+    <Compile Include="Functions\DefinedFunction.cs" />
     <Compile Include="Language\ComparisonOperator.cs" />
     <Compile Include="Language\ICallable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

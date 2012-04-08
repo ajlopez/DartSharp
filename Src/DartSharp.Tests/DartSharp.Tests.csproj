@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommandTests.cs" />
+    <Compile Include="Commands\DefineFunctionCommandTests.cs" />
     <Compile Include="Commands\NullCommandTests.cs" />
     <Compile Include="Commands\ExpressionCommandTests.cs" />
     <Compile Include="Commands\SetVariableCommandTests.cs" />

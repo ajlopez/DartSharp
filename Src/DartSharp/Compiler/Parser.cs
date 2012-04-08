@@ -106,18 +106,6 @@
             return commands;
         }
 
-        public ICommand ParseTopCommand()
-        {
-            Token token = this.NextToken();
-
-            if (token.Type == TokenType.Name && this.TryParseToken("(", TokenType.Separator))
-                return this.ParseDefineFunction(token.Value);
-
-            this.PushToken(token);
-
-            return ParseCommand();
-        }
-
         public ICommand ParseCommand()
         {
             Token token = this.NextToken();
@@ -134,6 +122,9 @@
                 this.ParseToken("}", TokenType.Separator);
                 return commands;
             }
+
+            if (token.Type == TokenType.Name && token.Value == "void")
+                return this.ParseDefineFunction();
 
             this.PushToken(token);
 
@@ -164,8 +155,9 @@
             return command;;
         }
 
-        private DefineFunctionCommand ParseDefineFunction(string name)
+        private DefineFunctionCommand ParseDefineFunction()
         {
+            string name = this.ParseName();
             IList<string> argnames = this.ParseArgumentNames();
             ICommand body = this.ParseCommand();
             return new DefineFunctionCommand(name, argnames, body);
@@ -201,6 +193,8 @@
 
         private IList<string> ParseArgumentNames()
         {
+            this.ParseToken("(", TokenType.Separator);
+
             IList<string> arguments = new List<string>();
 
             this.ParseToken(")", TokenType.Separator);

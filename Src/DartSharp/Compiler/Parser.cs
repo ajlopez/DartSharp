@@ -66,6 +66,13 @@
                 case TokenType.Name:
                     string name = token.Value;
 
+                    if (name == "null")
+                        return new ConstantExpression(null);
+                    if (name == "true")
+                        return new ConstantExpression(true);
+                    if (name == "false")
+                        return new ConstantExpression(false);
+
                     token = this.NextToken();
 
                     if (token != null && token.Type == TokenType.Separator && token.Type == TokenType.Separator && token.Value == "(")

@@ -465,5 +465,47 @@ namespace DartSharp.Tests.Compiler
             Assert.IsNotNull(command.ThenCommand);
             Assert.IsNull(command.ElseCommand);
         }
+
+        [TestMethod]
+        public void ParseNullAsConstant()
+        {
+            Parser parser = new Parser("null");
+            var result = parser.ParseExpression();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ConstantExpression));
+
+            ConstantExpression expression = (ConstantExpression)result;
+
+            Assert.IsNull(expression.Value);
+        }
+
+        [TestMethod]
+        public void ParseFalseAsConstant()
+        {
+            Parser parser = new Parser("false");
+            var result = parser.ParseExpression();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ConstantExpression));
+
+            ConstantExpression expression = (ConstantExpression)result;
+
+            Assert.AreEqual(false, expression.Value);
+        }
+
+        [TestMethod]
+        public void ParseTrueAsConstant()
+        {
+            Parser parser = new Parser("true");
+            var result = parser.ParseExpression();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ConstantExpression));
+
+            ConstantExpression expression = (ConstantExpression)result;
+
+            Assert.AreEqual(true, expression.Value);
+        }
     }
 }

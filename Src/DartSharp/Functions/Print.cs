@@ -25,6 +25,8 @@
             else
                 writer.WriteLine(arguments[0]);
 
+            writer.Flush();
+
             return null;
         }
     }

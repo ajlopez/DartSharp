@@ -126,6 +126,9 @@
 
             if (token.Type == TokenType.Name)
             {
+                if (token.Value == "if")
+                    return this.ParseIfCommand();
+
                 if (token.Value == "void")
                     return this.ParseDefineFunction(this.ParseName());
 
@@ -191,6 +194,21 @@
             this.ParseToken(";", TokenType.Separator);
 
             return command;
+        }
+
+        private ICommand ParseIfCommand()
+        {
+            this.ParseToken("(", TokenType.Separator);
+            IExpression condition = this.ParseExpression();
+            this.ParseToken(")", TokenType.Separator);
+
+            ICommand thencommand = this.ParseCommand();
+            ICommand elsecommand = null;
+
+            if (this.TryParseToken("else", TokenType.Name))
+                elsecommand = this.ParseCommand();
+
+            return new IfCommand(condition, thencommand, elsecommand);
         }
 
         private IEnumerable<IExpression> ParseArguments()

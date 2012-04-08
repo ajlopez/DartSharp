@@ -449,5 +449,21 @@ namespace DartSharp.Tests.Compiler
             Assert.AreEqual("main", command.Name);
             Assert.IsInstanceOfType(command.Command, typeof(CompositeCommand));
         }
+
+        [TestMethod]
+        public void ParseSimpleIfCommand()
+        {
+            Parser parser = new Parser("if (a) \r\n b = 2;");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(IfCommand));
+
+            IfCommand command = (IfCommand)result;
+
+            Assert.IsNotNull(command.Condition);
+            Assert.IsNotNull(command.ThenCommand);
+            Assert.IsNull(command.ElseCommand);
+        }
     }
 }

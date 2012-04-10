@@ -200,6 +200,9 @@
                 if (token.Value == "if")
                     return this.ParseIfCommand();
 
+                if (token.Value == "while")
+                    return this.ParseWhileCommand();
+
                 if (token.Value == "return")
                 {
                     var expr = this.ParseExpression();
@@ -287,6 +290,17 @@
                 elsecommand = this.ParseCommand();
 
             return new IfCommand(condition, thencommand, elsecommand);
+        }
+
+        private ICommand ParseWhileCommand()
+        {
+            this.ParseToken("(", TokenType.Separator);
+            IExpression condition = this.ParseExpression();
+            this.ParseToken(")", TokenType.Separator);
+
+            ICommand command = this.ParseCommand();
+
+            return new WhileCommand(condition, command);
         }
 
         private IEnumerable<IExpression> ParseArguments()

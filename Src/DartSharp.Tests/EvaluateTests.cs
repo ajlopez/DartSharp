@@ -61,6 +61,15 @@ namespace DartSharp.Tests
         }
 
         [TestMethod]
+        public void EvaluateSimpleWhile()
+        {
+            Context context = new Context();
+            context.SetValue("a", 0);
+            EvaluateCommands("while (a < 10) a = a +1;", context);
+            Assert.AreEqual(10, context.GetValue("a"));
+        }
+
+        [TestMethod]
         public void EvaluateSimpleArithmeticExpressions()
         {
             Assert.AreEqual(2, EvaluateExpression("1+1", null));

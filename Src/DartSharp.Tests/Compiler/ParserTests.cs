@@ -519,6 +519,21 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
+        public void ParseSimpleWhileCommand()
+        {
+            Parser parser = new Parser("while (a) \r\n b = 2;");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(WhileCommand));
+
+            WhileCommand command = (WhileCommand)result;
+
+            Assert.IsNotNull(command.Condition);
+            Assert.IsNotNull(command.Command);
+        }
+
+        [TestMethod]
         public void ParseNullAsConstant()
         {
             Parser parser = new Parser("null");

@@ -45,6 +45,7 @@
     <Compile Include="Commands\NullCommandTests.cs" />
     <Compile Include="Commands\ExpressionCommandTests.cs" />
     <Compile Include="Commands\SetVariableCommandTests.cs" />
+    <Compile Include="Commands\WhileCommandTests.cs" />
     <Compile Include="Compiler\LexerTests.cs" />
     <Compile Include="EvaluateTests.cs" />
     <Compile Include="Expressions\ArithmeticExpressionsTests.cs" />

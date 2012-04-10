@@ -54,6 +54,7 @@
     <Compile Include="Commands\ExpressionCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\SetVariableCommand.cs" />
+    <Compile Include="Commands\WhileCommand.cs" />
     <Compile Include="Compiler\Lexer.cs" />
     <Compile Include="Compiler\LexerException.cs" />
     <Compile Include="Compiler\Parser.cs" />

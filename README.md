@@ -31,7 +31,7 @@ int fib(int  n) {
 }
 
 main() {
-  print('fib(20) = ${fib(20)}');
+  print(fib(20));
 }
 ```
 

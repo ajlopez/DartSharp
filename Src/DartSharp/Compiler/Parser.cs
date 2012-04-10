@@ -80,7 +80,7 @@
 
         private IExpression ParseBinaryExpressionLevelAdd()
         {
-            IExpression expression = this.ParseSimpleExpression();
+            IExpression expression = this.ParseDotExpression();
 
             if (expression == null)
                 return null;
@@ -90,12 +90,33 @@
             while (token != null && token.Type == TokenType.Operator && (token.Value == "+" || token.Value == "-"))
             {
                 ArithmeticOperator oper = (token.Value == "+" ? ArithmeticOperator.Add : ArithmeticOperator.Subtract);
-                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseSimpleExpression());
+                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseDotExpression());
                 token = this.NextToken();
             }
 
             if (token != null)
                 this.PushToken(token);
+
+            return expression;
+        }
+
+        private IExpression ParseDotExpression()
+        {
+            IExpression expression = this.ParseSimpleExpression();
+
+            if (expression == null)
+                return null;
+
+            while (TryParseToken(".", TokenType.Separator))
+            {
+                string name = this.ParseName();
+                if (TryPeekToken("(", TokenType.Separator))
+                {
+                    expression = new DotExpression(expression, name, this.ParseArguments());
+                }
+                else
+                    expression = new DotExpression(expression, name);
+            }
 
             return expression;
         }

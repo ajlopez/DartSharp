@@ -89,6 +89,19 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
+        public void GetPointSeparator()
+        {
+            Lexer lexer = new Lexer(".");
+            Token token = lexer.NextToken();
+
+            Assert.IsNotNull(token);
+            Assert.AreEqual(".", token.Value);
+            Assert.AreEqual(TokenType.Separator, token.Type);
+
+            Assert.IsNull(lexer.NextToken());
+        }
+
+        [TestMethod]
         public void GetInteger()
         {
             Lexer lexer = new Lexer("123");

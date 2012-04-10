@@ -10,7 +10,7 @@
     {
         private IExpression expression;
         private string name;
-        private ICollection<IExpression> arguments;
+        private IEnumerable<IExpression> arguments;
         private Type type;
 
         public DotExpression(IExpression expression, string name)
@@ -18,7 +18,7 @@
         {
         }
 
-        public DotExpression(IExpression expression, string name, ICollection<IExpression> arguments)
+        public DotExpression(IExpression expression, string name, IEnumerable<IExpression> arguments)
         {
             this.expression = expression;
             this.name = name;
@@ -32,7 +32,7 @@
 
         public Type Type { get { return this.type; } }
 
-        public ICollection<IExpression> Arguments { get { return this.arguments; } }
+        public IEnumerable<IExpression> Arguments { get { return this.arguments; } }
 
         public object Evaluate(Context context)
         {

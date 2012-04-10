@@ -622,5 +622,38 @@ namespace DartSharp.Tests.Compiler
             Assert.IsInstanceOfType(expression.LeftExpression, typeof(ConstantExpression));
             Assert.IsInstanceOfType(expression.RightExpression, typeof(ConstantExpression));
         }
+
+        [TestMethod]
+        public void ParseDotExpression()
+        {
+            Parser parser = new Parser("a.length");
+            var result = parser.ParseExpression();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DotExpression));
+
+            DotExpression expression = (DotExpression)result;
+
+            Assert.AreEqual("length", expression.Name);
+            Assert.IsNull(expression.Arguments);
+            Assert.IsInstanceOfType(expression.Expression, typeof(VariableExpression));
+        }
+
+        [TestMethod]
+        public void ParseDotExpressionWithArguments()
+        {
+            Parser parser = new Parser("a.slice(1)");
+            var result = parser.ParseExpression();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DotExpression));
+
+            DotExpression expression = (DotExpression)result;
+
+            Assert.AreEqual("slice", expression.Name);
+            Assert.IsNotNull(expression.Arguments);
+            Assert.AreEqual(1, expression.Arguments.Count());
+            Assert.IsInstanceOfType(expression.Expression, typeof(VariableExpression));
+        }
     }
 }

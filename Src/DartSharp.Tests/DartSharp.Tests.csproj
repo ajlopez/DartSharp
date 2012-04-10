@@ -36,6 +36,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommandTests.cs" />
@@ -55,11 +57,13 @@
     <Compile Include="ContextTests.cs" />
     <Compile Include="Expressions\ComparisonExpressionsTests.cs" />
     <Compile Include="Expressions\ConstantExpressionTests.cs" />
+    <Compile Include="Expressions\DotExpressionTests.cs" />
     <Compile Include="Expressions\VariableExpressionTests.cs" />
     <Compile Include="Functions\PrintTests.cs" />
     <Compile Include="Language\PredicateTests.cs" />
     <Compile Include="ObjectUtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeUtilitiesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DartSharp\DartSharp.csproj">

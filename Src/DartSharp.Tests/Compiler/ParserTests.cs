@@ -488,6 +488,38 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfNoTypeInArgument()
+        {
+            Parser parser = new Parser("int myfun(a, b) { return a+b; }");
+            parser.ParseCommand();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfNoCommaToSeparateArguments()
+        {
+            Parser parser = new Parser("int myfun(int a int b) { return a+b; }");
+            parser.ParseCommand();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfMissingParenthesis()
+        {
+            Parser parser = new Parser("int myfun( { return a+b; }");
+            parser.ParseCommand();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfEndOfInput()
+        {
+            Parser parser = new Parser("int myfun(");
+            parser.ParseCommand();
+        }
+
+        [TestMethod]
         public void ParseMainFunctionDefinition()
         {
             Parser parser = new Parser("main() { a = 1; b = 2; }");

@@ -107,6 +107,15 @@ namespace DartSharp.Tests
             Assert.AreEqual(2, context.GetValue("a"));
         }
 
+        [TestMethod]
+        public void EvaluateSimpleDotExpressions()
+        {
+            Context context = new Context();
+            Assert.AreEqual(3, EvaluateExpression("'foo'.Length", context));
+            Assert.AreEqual("FOO", EvaluateExpression("'foo'.ToUpper()", context));
+            Assert.AreEqual("oo", EvaluateExpression("'foo'.Substring(1)", context));
+        }
+
         private static object EvaluateExpression(string text, Context context)
         {
             Parser parser = new Parser(text);

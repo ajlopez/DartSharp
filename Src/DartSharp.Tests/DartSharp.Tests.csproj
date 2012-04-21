@@ -57,6 +57,7 @@
     <Compile Include="ContextTests.cs" />
     <Compile Include="Expressions\ComparisonExpressionsTests.cs" />
     <Compile Include="Expressions\ConstantExpressionTests.cs" />
+    <Compile Include="Expressions\ArrayExpressionTests.cs" />
     <Compile Include="Expressions\DotExpressionTests.cs" />
     <Compile Include="Expressions\VariableExpressionTests.cs" />
     <Compile Include="Functions\PrintTests.cs" />

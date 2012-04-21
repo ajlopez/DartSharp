@@ -110,9 +110,9 @@
             while (TryParseToken(".", TokenType.Separator))
             {
                 string name = this.ParseName();
-                if (TryPeekToken("(", TokenType.Separator))
+                if (TryParseToken("(", TokenType.Separator))
                 {
-                    expression = new DotExpression(expression, name, this.ParseArguments());
+                    expression = new DotExpression(expression, name, this.ParseExpressionList(")"));
                 }
                 else
                     expression = new DotExpression(expression, name);
@@ -153,8 +153,7 @@
 
                     if (token != null && token.Type == TokenType.Separator && token.Type == TokenType.Separator && token.Value == "(")
                     {
-                        this.PushToken(token);
-                        return new CallExpression(new VariableExpression(name), this.ParseArguments());
+                        return new CallExpression(new VariableExpression(name), this.ParseExpressionList(")"));
                     }
 
                     IExpression expr = new VariableExpression(name);
@@ -174,6 +173,13 @@
                         this.ParseToken(")", TokenType.Separator);
                         return result;
                     }
+
+                    if (token.Value == "[")
+                    {
+                        var result = this.ParseExpressionList("]");
+                        return new ArrayExpression(result);
+                    }
+
                     break;
             }
 
@@ -324,20 +330,18 @@
             return new WhileCommand(condition, command);
         }
 
-        private IEnumerable<IExpression> ParseArguments()
+        private IEnumerable<IExpression> ParseExpressionList(string upto)
         {
-            IList<IExpression> arguments = new List<IExpression>();
+            IList<IExpression> expressions = new List<IExpression>();
 
-            this.ParseToken("(", TokenType.Separator);
-
-            while (!this.TryParseToken(")", TokenType.Separator))
+            while (!this.TryParseToken(upto, TokenType.Separator))
             {
-                if (arguments.Count > 0)
+                if (expressions.Count > 0)
                     this.ParseToken(",", TokenType.Separator);
-                arguments.Add(this.ParseExpression());
+                expressions.Add(this.ParseExpression());
             }
 
-            return arguments;
+            return expressions;
         }
 
         private IList<string> ParseArgumentNames()

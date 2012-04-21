@@ -655,5 +655,19 @@ namespace DartSharp.Tests.Compiler
             Assert.AreEqual(1, expression.Arguments.Count());
             Assert.IsInstanceOfType(expression.Expression, typeof(VariableExpression));
         }
+
+        [TestMethod]
+        public void ParseArrayExpression()
+        {
+            Parser parser = new Parser("[1,2,3]");
+            var result = parser.ParseExpression();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ArrayExpression));
+
+            ArrayExpression expr = (ArrayExpression)result;
+            Assert.IsNotNull(expr.Expressions);
+            Assert.AreEqual(3, expr.Expressions.Count());
+        }
     }
 }

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CompositeCommand.cs" />
+    <Compile Include="Commands\DefineClassCommand.cs" />
     <Compile Include="Commands\ReturnCommand.cs" />
     <Compile Include="Commands\DefineFunctionCommand.cs" />
     <Compile Include="Commands\IfCommand.cs" />

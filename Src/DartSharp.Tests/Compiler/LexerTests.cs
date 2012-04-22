@@ -50,6 +50,41 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
+        public void GetNamesWithMultiLineComment()
+        {
+            Lexer lexer = new Lexer("  foo  /* Foo \r\n Variable */ bar");
+            Token token = lexer.NextToken();
+
+            Assert.IsNotNull(token);
+            Assert.AreEqual("foo", token.Value);
+            Assert.AreEqual(TokenType.Name, token.Type);
+            
+            token = lexer.NextToken();
+
+            Assert.IsNotNull(token);
+            Assert.AreEqual("bar", token.Value);
+            Assert.AreEqual(TokenType.Name, token.Type);
+
+            Assert.IsNull(lexer.NextToken());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(LexerException))]
+        public void RaiseIfCommentIsNotClosed()
+        {
+            Lexer lexer = new Lexer("/* Comment wo/end ");
+            lexer.NextToken();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(LexerException))]
+        public void RaiseIfCommentIsNotClosedByAMissingChar()
+        {
+            Lexer lexer = new Lexer("/* Comment wo/end *");
+            lexer.NextToken();
+        }
+
+        [TestMethod]
         public void GetAssignmentOperator()
         {
             Lexer lexer = new Lexer("=");

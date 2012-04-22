@@ -130,14 +130,39 @@
 
             int ich2 = this.NextSimpleChar();
 
-            if (ich2 < 0 || ((char)ich2) != '/')
+            if (ich2 < 0)
             {
                 this.PushChar(ich2);
                 return ich;
             }
 
-            for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '\r' && ((char)ich) != '\n'; ich = this.NextSimpleChar())
-                ;
+            if ((char)ich2 == '/')
+            {
+                for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '\r' && ((char)ich) != '\n'; ich = this.NextSimpleChar())
+                    ;
+            }
+            else if ((char)ich2 == '*')
+            {
+                while (true)
+                {
+                    for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '*'; ich = this.NextSimpleChar())
+                        ;
+
+                    if (ich < 0)
+                        throw new LexerException("Unexpected End of Input");
+
+                    ich = this.NextSimpleChar();
+
+                    if (ich < 0)
+                        throw new LexerException("Unexpected End of Input");
+
+                    // TODO avoid recursion
+                    if ((char)ich == '/')
+                        return this.NextChar();
+                }
+            }
+            else
+                this.PushChar(ich2);
 
             return ich;
         }

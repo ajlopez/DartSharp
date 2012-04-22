@@ -69,6 +69,9 @@
                 if (token.Value == "while")
                     return this.ParseWhileCommand();
 
+                if (token.Value == "class")
+                    return this.ParseDefineClassCommand();
+
                 if (token.Value == "return")
                 {
                     var expr = this.ParseExpression();
@@ -398,6 +401,14 @@
             ICommand command = this.ParseCommand();
 
             return new WhileCommand(condition, command);
+        }
+
+        private ICommand ParseDefineClassCommand()
+        {
+            string name = this.ParseName();
+            this.ParseToken("{", TokenType.Separator);
+            this.ParseToken("}", TokenType.Separator);
+            return new DefineClassCommand(name, null);
         }
 
         private IEnumerable<IExpression> ParseExpressionList(string upto)

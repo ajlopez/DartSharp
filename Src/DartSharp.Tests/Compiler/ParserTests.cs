@@ -661,5 +661,22 @@ namespace DartSharp.Tests.Compiler
             Assert.IsNotNull(expr.Expressions);
             Assert.AreEqual(3, expr.Expressions.Count());
         }
+
+        [TestMethod]
+        public void ParseDefineClassCommand()
+        {
+            Parser parser = new Parser("class MyClass { } ");
+            var result = parser.ParseCommand();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DefineClassCommand));
+
+            DefineClassCommand command = (DefineClassCommand)result;
+
+            Assert.AreEqual("MyClass", command.Name);
+            Assert.IsNull(command.Command);
+
+            Assert.IsNull(parser.ParseCommand());
+        }
     }
 }

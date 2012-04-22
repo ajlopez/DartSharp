@@ -195,6 +195,14 @@ namespace DartSharp.Tests
             Assert.IsTrue(context.HasVariable("e"));
         }
 
+        [TestMethod]
+        public void DefineTypedVariable()
+        {
+            Context context = new Context();
+            EvaluateCommands("MyModule.MyClass a;", context);
+            Assert.IsTrue(context.HasVariable("a"));
+        }
+
         private static object EvaluateExpression(string text, Context context)
         {
             Parser parser = new Parser(text);

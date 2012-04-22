@@ -14,5 +14,7 @@
         IType GetVariableType(string name);
 
         IMethod GetMethod(string name);
+
+        object NewInstance(object[] arguments);
     }
 }

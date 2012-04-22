@@ -102,5 +102,18 @@ namespace DartSharp.Tests.Language
             klass.DefineMethod("getName", getname);
             klass.DefineMethod("getName", getname);
         }
+
+        [TestMethod]
+        public void CreateNewInstance()
+        {
+            IClass klass = new BaseClass("MyClass", null);
+            var result = klass.NewInstance(null);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BaseObject));
+
+            BaseObject obj = (BaseObject)result;
+            Assert.AreEqual(klass, obj.Type);
+        }
     }
 }

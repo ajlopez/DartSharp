@@ -63,5 +63,10 @@
 
             return this.methods[name];
         }
+
+        public object NewInstance(object[] arguments)
+        {
+            return new BaseObject(this);
+        }
     }
 }

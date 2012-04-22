@@ -27,18 +27,6 @@ namespace DartSharp.Tests.Expressions
             VariableExpression expr = new VariableExpression("foo");
 
             Assert.AreEqual("foo", expr.Name);
-            Assert.IsNull(expr.TypeExpression);
-        }
-
-        [TestMethod]
-        public void DefineVariableWithNameAndType()
-        {
-            Context context = new Context();
-            VariableExpression typeexpr = new VariableExpression("List");
-            VariableExpression expr = new VariableExpression(typeexpr, "foo");
-
-            Assert.AreEqual("foo", expr.Name);
-            Assert.AreEqual(typeexpr, expr.TypeExpression);
         }
 
         [TestMethod]

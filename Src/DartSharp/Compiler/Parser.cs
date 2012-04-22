@@ -245,16 +245,6 @@
 
                 if (token.Value == "main")
                     return this.ParseDefineFunction(token.Value);
-
-                if (this.IsType(token.Value))
-                {
-                    string name = this.ParseName();
-
-                    if (this.TryPeekToken("(", TokenType.Separator))
-                        return this.ParseDefineFunction(name);
-
-                    return this.ParseDefineVariableCommand(name);
-                }
             }
 
             this.PushToken(token);
@@ -265,6 +255,14 @@
                 return null;
 
             token = this.NextToken();
+
+            if (token != null && token.Type == TokenType.Name && IsTypeExpression(expression))
+            {
+                if (this.TryPeekToken("(", TokenType.Separator))
+                    return this.ParseDefineFunction(token.Value);
+
+                return this.ParseDefineVariableCommand(expression, token.Value);
+            }
 
             ICommand command = null;
 
@@ -362,14 +360,14 @@
             return new DefineFunctionCommand(name, argnames, body);
         }
 
-        private ICommand ParseDefineVariableCommand(string name)
+        private ICommand ParseDefineVariableCommand(IExpression typeexpression, string name)
         {
             DefineVariableCommand command;
 
             if (this.TryParseToken("=", TokenType.Operator))
-                command = new DefineVariableCommand(name, this.ParseExpression());
+                command = new DefineVariableCommand(typeexpression, name, this.ParseExpression());
             else
-                command =  new DefineVariableCommand(name);
+                command =  new DefineVariableCommand(typeexpression, name);
 
             this.ParseToken(";", TokenType.Separator);
 
@@ -426,7 +424,9 @@
 
             while (token != null && token.Type == TokenType.Name)
             {
-                if (!this.IsType(token.Value))
+                this.PushToken(token);
+                IExpression expr = this.ParseExpression();
+                if (!this.IsTypeExpression(expr))
                     throw new ParserException(string.Format("Unexpected '{0}'", token.Value));
                 
                 string name = this.ParseName();
@@ -504,9 +504,15 @@
             this.tokens.Push(token);
         }
 
-        private bool IsType(string name)
+        private bool IsTypeExpression(IExpression expression)
         {
-            return typenames.Contains(name);
+            if (expression is VariableExpression)
+                return true;
+
+            if (expression is DotExpression && ((DotExpression)expression).Arguments == null)
+                return true;
+
+            return false;
         }
     }
 }

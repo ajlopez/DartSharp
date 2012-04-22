@@ -402,14 +402,6 @@ namespace DartSharp.Tests.Compiler
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParserException))]
-        public void RaiseNameExpectedAfterVar()
-        {
-            Parser parser = new Parser("var");
-            parser.ParseCommand();
-        }
-
-        [TestMethod]
         public void ParseCompositeCommand()
         {
             Parser parser = new Parser("{ a = 1; b = 2; }");

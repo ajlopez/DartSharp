@@ -15,20 +15,41 @@ namespace DartSharp.Tests.Expressions
         public void EvaluateUndefinedVariable()
         {
             Context context = new Context();
-            VariableExpression expr = new VariableExpression("Foo");
+            VariableExpression expr = new VariableExpression("foo");
 
             Assert.IsNull(expr.Evaluate(context));
+        }
+
+        [TestMethod]
+        public void DefineVariableWithName()
+        {
+            Context context = new Context();
+            VariableExpression expr = new VariableExpression("foo");
+
+            Assert.AreEqual("foo", expr.Name);
+            Assert.IsNull(expr.TypeExpression);
+        }
+
+        [TestMethod]
+        public void DefineVariableWithNameAndType()
+        {
+            Context context = new Context();
+            VariableExpression typeexpr = new VariableExpression("List");
+            VariableExpression expr = new VariableExpression(typeexpr, "foo");
+
+            Assert.AreEqual("foo", expr.Name);
+            Assert.AreEqual(typeexpr, expr.TypeExpression);
         }
 
         [TestMethod]
         public void EvaluateDefinedVariable()
         {
             Context context = new Context();
-            context.SetValue("One", 1);
-            VariableExpression expr = new VariableExpression("One");
+            context.SetValue("one", 1);
+            VariableExpression expr = new VariableExpression("one");
 
             Assert.AreEqual(1, expr.Evaluate(context));
-            Assert.AreEqual("One", expr.Name);
+            Assert.AreEqual("one", expr.Name);
         }
     }
 }

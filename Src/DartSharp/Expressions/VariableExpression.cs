@@ -8,6 +8,7 @@
 
     public class VariableExpression : IExpression
     {
+        private IExpression typeexpression;
         private string name;
 
         public VariableExpression(string name)
@@ -15,7 +16,15 @@
             this.name = name;
         }
 
+        public VariableExpression(IExpression typeexpression, string name)
+        {
+            this.typeexpression = typeexpression;
+            this.name = name;
+        }
+
         public string Name { get { return this.name; } }
+
+        public IExpression TypeExpression { get { return this.typeexpression; } }
 
         public object Evaluate(Context context)
         {

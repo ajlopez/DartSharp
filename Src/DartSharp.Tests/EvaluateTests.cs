@@ -183,6 +183,18 @@ namespace DartSharp.Tests
             Assert.AreEqual("oo", EvaluateExpression("'foo'.Substring(1)", context));
         }
 
+        [TestMethod]
+        public void DefineVariables()
+        {
+            Context context = new Context();
+            EvaluateCommands("var a; int b; double c; String d; bool e;", context);
+            Assert.IsTrue(context.HasVariable("a"));
+            Assert.IsTrue(context.HasVariable("b"));
+            Assert.IsTrue(context.HasVariable("c"));
+            Assert.IsTrue(context.HasVariable("d"));
+            Assert.IsTrue(context.HasVariable("e"));
+        }
+
         private static object EvaluateExpression(string text, Context context)
         {
             Parser parser = new Parser(text);

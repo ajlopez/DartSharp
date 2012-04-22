@@ -41,7 +41,7 @@
                 if (parameters == null)
                     return ((IObject)obj).GetValue(name);
 
-                return ((IObject)obj).Invoke(name, parameters);
+                return ((IObject)obj).Invoke(name, null, parameters);
             }
 
             return GetNativeValue(obj, name, parameters);

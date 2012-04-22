@@ -7,25 +7,25 @@
 
     public class BaseObject : IObject
     {
-        private IClass @class;
+        private IType type;
         private Dictionary<string, object> values;
 
-        public BaseObject(IClass @class)
+        public BaseObject(IType type)
         {
-            if (@class == null)
-                throw new ArgumentNullException("class");
+            if (type == null)
+                throw new ArgumentNullException("type");
 
-            this.@class = @class;
+            this.type = type;
         }
 
-        public IClass Class
+        public IType Type
         {
-            get { return this.@class; }
+            get { return this.type; }
         }
 
         public object GetValue(string name)
         {
-            if (this.@class.GetVariableType(name) == null)
+            if (this.type.GetVariableType(name) == null)
                 throw new InvalidOperationException(string.Format("Undefined Variable '{0}'", name));
 
             if (this.values == null || !this.values.ContainsKey(name))
@@ -36,7 +36,7 @@
 
         public void SetValue(string name, object value)
         {
-            if (this.@class.GetVariableType(name) == null)
+            if (this.type.GetVariableType(name) == null)
                 throw new InvalidOperationException(string.Format("Undefined Variable '{0}'", name));
 
             if (this.values == null)
@@ -44,9 +44,14 @@
             this.values[name] = value;
         }
 
-        public object Invoke(string name, object[] parameters)
+        public object Invoke(string name, Context context, object[] parameters)
         {
-            throw new NotImplementedException();
+            IMethod method = this.type.GetMethod(name);
+
+            if (method == null)
+                throw new InvalidOperationException(string.Format("Undefined Method '{0}'", name));
+
+            return method.Call(this, context, parameters);
         }
     }
 }

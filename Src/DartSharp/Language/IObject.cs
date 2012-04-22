@@ -7,12 +7,12 @@
 
     public interface IObject
     {
-        IClass Class { get; }
+        IType Type { get; }
 
         object GetValue(string name);
 
         void SetValue(string name, object value);
 
-        object Invoke(string name, object[] parameters);
+        object Invoke(string name, Context context, object[] parameters);
     }
 }

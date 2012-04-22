@@ -34,7 +34,12 @@
 
         public void DefineMethod(string name, IMethod method)
         {
-            throw new NotImplementedException();
+            if (this.methods == null)
+                this.methods = new Dictionary<string, IMethod>();
+            else if (this.methods.ContainsKey(name))
+                throw new InvalidOperationException("Method already defined");
+
+            this.methods[name] = method;
         }
 
         public IType GetVariableType(string name)
@@ -50,7 +55,13 @@
 
         public IMethod GetMethod(string name)
         {
-            throw new NotImplementedException();
+            if (this.methods == null || !this.methods.ContainsKey(name))
+                if (this.super != null)
+                    return this.super.GetMethod(name);
+                else
+                    return null;
+
+            return this.methods[name];
         }
     }
 }

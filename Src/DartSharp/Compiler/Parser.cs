@@ -164,6 +164,9 @@
                     return expr;
 
                 case TokenType.String:
+                    if (token.Value.Contains('$'))
+                        return ParseStringInterpolation(token.Value);
+
                     return new ConstantExpression(token.Value);
 
                 case TokenType.Separator:
@@ -281,6 +284,75 @@
                 throw new ParserException("Expected ';'");
 
             return command;;
+        }
+
+        private IExpression ParseStringInterpolation(string text)
+        {
+            IList<IExpression> expressions = new List<IExpression>();
+
+            while (true)
+            {
+                int pos = text.IndexOf('$');
+
+                if (pos < 0)
+                {
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        IExpression textexpr = new ConstantExpression(text);
+                        expressions.Add(textexpr);
+                    }
+
+                    break;
+                }
+
+                if (pos == text.Length - 1)
+                    throw new ParserException("Unexpected End of String");
+
+                string left = text.Substring(0, pos);
+
+                if (!string.IsNullOrEmpty(left))
+                    expressions.Add(new ConstantExpression(left));
+
+                if (text[pos + 1] == '{')
+                {
+                    int pos2 = text.IndexOf('}', pos + 1);
+
+                    if (pos2 < 0)
+                        throw new ParserException("Unexpected End of String");
+
+                    string subtext = text.Substring(pos + 2, pos2 - pos - 2);
+                    text = text.Substring(pos2 + 1);
+
+                    Parser parser = new Parser(subtext);
+
+                    IExpression newexpr = parser.ParseExpression();
+
+                    if (parser.ParseExpression() != null)
+                        throw new ParserException("Bad String Interpolation");
+
+                    expressions.Add(newexpr);
+                }
+                else if (char.IsLetter(text[pos + 1]))
+                {
+                    Parser parser = new Parser(text.Substring(pos + 1));
+                    string name = parser.ParseName();
+                    IExpression varexpr = new VariableExpression(name);
+                    expressions.Add(varexpr);
+                    text = text.Substring(pos + name.Length + 1);
+                }
+                else
+                    throw new ParserException("Bad String Interpolation");
+            }
+
+            if (expressions.Count == 1)
+                return expressions[0];
+
+            IExpression expression = expressions[0];
+
+            foreach (var expr in expressions.Skip(1))
+                expression = new ArithmeticBinaryExpression(ArithmeticOperator.Add, expression, expr);
+
+            return expression;
         }
 
         private DefineFunctionCommand ParseDefineFunction(string name)

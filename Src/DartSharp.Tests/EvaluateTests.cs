@@ -80,6 +80,73 @@ namespace DartSharp.Tests
         }
 
         [TestMethod]
+        public void EvaluateStringConcatenation()
+        {
+            Assert.AreEqual("foobar", EvaluateExpression("'foo' + 'bar'", null));
+            Assert.AreEqual("foo1", EvaluateExpression("'foo' + 1", null));
+        }
+
+        [TestMethod]
+        public void EvaluateNameInStringInterpolation()
+        {
+            Context context = new Context();
+            context.SetValue("name", "World");
+            Assert.AreEqual("Hello, World!", EvaluateExpression("'Hello, $name!'", context));
+        }
+
+        [TestMethod]
+        public void EvaluateNameInSimpleStringInterpolation()
+        {
+            Context context = new Context();
+            context.SetValue("name", "World");
+            Assert.AreEqual("World", EvaluateExpression("'$name'", context));
+        }
+
+        [TestMethod]
+        public void EvaluateExpressionInStringInterpolation()
+        {
+            Context context = new Context();
+            context.SetValue("name", "World");
+            Assert.AreEqual("Hello, WORLD!", EvaluateExpression("'Hello, ${name.ToUpper()}!'", context));
+        }
+
+        [TestMethod]
+        public void EvaluateNameAndExpressionInStringInterpolation()
+        {
+            Context context = new Context();
+            context.SetValue("name", "World");
+            Assert.AreEqual("Hello, World, WORLD!", EvaluateExpression("'Hello, $name, ${name.ToUpper()}!'", context));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfUnclosedExpressionInInterpolation()
+        {
+            EvaluateExpression("'Hello, ${name.ToUpper()!'", null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfNoNameInterpolation()
+        {
+            EvaluateExpression("'Hello, $0!'", null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfNoInterpolation()
+        {
+            EvaluateExpression("'Hello, $'", null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void RaiseIfBadExpressionInInterpolation()
+        {
+            EvaluateExpression("'Hello, ${0+1 2+3}'", null);
+        }
+
+        [TestMethod]
         public void EvaluateSimpleCompareExpressions()
         {
             Assert.AreEqual(true, EvaluateExpression("1==1", null));

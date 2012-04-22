@@ -23,12 +23,12 @@
 
         public object Evaluate(Context context)
         {
-            ICallable function = (ICallable) this.expression.Evaluate(context);
+            ICallable function = (ICallable)this.expression.Evaluate(context);
 
             IList<object> values = new List<object>();
 
-            if (arguments != null)
-                foreach (var argument in arguments)
+            if (this.arguments != null)
+                foreach (var argument in this.arguments)
                     values.Add(argument.Evaluate(context));
 
             return function.Call(context, values);

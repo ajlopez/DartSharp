@@ -21,5 +21,3 @@
         public TokenType Type { get { return this.type; } }
     }
 }
-
-

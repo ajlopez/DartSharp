@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
-    using System.IO;
 
     public class Lexer
     {
@@ -71,7 +71,7 @@
 
         private Token NextString(char delimeter)
         {
-            string value = "";
+            string value = string.Empty;
             int ich;
 
             for (ich = this.NextChar(); ich != -1 && ((char)ich) != delimeter; ich = this.reader.Read())
@@ -138,15 +138,15 @@
 
             if ((char)ich2 == '/')
             {
-                for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '\r' && ((char)ich) != '\n'; ich = this.NextSimpleChar())
-                    ;
+                for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '\r' && ((char)ich) != '\n';)
+                    ich = this.NextSimpleChar();
             }
             else if ((char)ich2 == '*')
             {
                 while (true)
                 {
-                    for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '*'; ich = this.NextSimpleChar())
-                        ;
+                    for (ich = this.NextSimpleChar(); ich >= 0 && ((char)ich) != '*';)
+                        ich = this.NextSimpleChar();
 
                     if (ich < 0)
                         throw new LexerException("Unexpected End of Input");

@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
-    using DartSharp.Expressions;
-    using System.Globalization;
     using DartSharp.Commands;
+    using DartSharp.Expressions;
     using DartSharp.Language;
 
     public class Parser
@@ -23,170 +23,6 @@
         public Parser(Lexer lexer)
         {
             this.lexer = lexer;
-        }
-
-        public IExpression ParseExpression()
-        {
-            var expression = this.ParseBinaryExpressionLevelMultiply();
-
-            if (expression == null)
-                return null;
-
-            Token token = this.NextToken();
-
-            if (token == null)
-                return expression;
-
-            if (token.Type == TokenType.Operator)
-            {
-                if (token.Value == "==")
-                    return new CompareExpression(ComparisonOperator.Equal, expression, this.ParseExpression());
-                if (token.Value == "<")
-                    return new CompareExpression(ComparisonOperator.Less, expression, this.ParseExpression());
-                if (token.Value == ">")
-                    return new CompareExpression(ComparisonOperator.Greater, expression, this.ParseExpression());
-                if (token.Value == "<=")
-                    return new CompareExpression(ComparisonOperator.LessEqual, expression, this.ParseExpression());
-                if (token.Value == ">=")
-                    return new CompareExpression(ComparisonOperator.GreaterEqual, expression, this.ParseExpression());
-            }
-
-            this.PushToken(token);
-
-            return expression;
-        }
-
-        private IExpression ParseBinaryExpressionLevelMultiply()
-        {
-            IExpression expression = this.ParseBinaryExpressionLevelAdd();
-
-            if (expression == null)
-                return null;
-
-            Token token = this.NextToken();
-
-            while (token != null && token.Type == TokenType.Operator && (token.Value == "*" || token.Value == "/"))
-            {
-                ArithmeticOperator oper = (token.Value == "*" ? ArithmeticOperator.Multiply : ArithmeticOperator.Divide);
-                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseBinaryExpressionLevelAdd());
-                token = this.NextToken();
-            }
-
-            if (token != null)
-                this.PushToken(token);
-
-            return expression;
-        }
-
-        private IExpression ParseBinaryExpressionLevelAdd()
-        {
-            IExpression expression = this.ParseDotExpression();
-
-            if (expression == null)
-                return null;
-
-            Token token = this.NextToken();
-
-            while (token != null && token.Type == TokenType.Operator && (token.Value == "+" || token.Value == "-"))
-            {
-                ArithmeticOperator oper = (token.Value == "+" ? ArithmeticOperator.Add : ArithmeticOperator.Subtract);
-                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseDotExpression());
-                token = this.NextToken();
-            }
-
-            if (token != null)
-                this.PushToken(token);
-
-            return expression;
-        }
-
-        private IExpression ParseDotExpression()
-        {
-            IExpression expression = this.ParseSimpleExpression();
-
-            if (expression == null)
-                return null;
-
-            while (TryParseToken(".", TokenType.Separator))
-            {
-                string name = this.ParseName();
-                if (TryParseToken("(", TokenType.Separator))
-                {
-                    expression = new DotExpression(expression, name, this.ParseExpressionList(")"));
-                }
-                else
-                    expression = new DotExpression(expression, name);
-            }
-
-            return expression;
-        }
-
-        private IExpression ParseSimpleExpression()
-        {
-            Token token = this.NextToken();
-
-            if (token == null)
-                return null;
-
-            if (token.Type == TokenType.Separator && (token.Value == "}" || token.Value == ")"))
-            {
-                this.PushToken(token);
-                return null;
-            }
-
-            switch (token.Type)
-            {
-                case TokenType.Integer:
-                    return new ConstantExpression(int.Parse(token.Value, CultureInfo.InvariantCulture));
-                
-                case TokenType.Name:
-                    string name = token.Value;
-
-                    if (name == "null")
-                        return new ConstantExpression(null);
-                    if (name == "true")
-                        return new ConstantExpression(true);
-                    if (name == "false")
-                        return new ConstantExpression(false);
-
-                    token = this.NextToken();
-
-                    if (token != null && token.Type == TokenType.Separator && token.Type == TokenType.Separator && token.Value == "(")
-                    {
-                        return new CallExpression(new VariableExpression(name), this.ParseExpressionList(")"));
-                    }
-
-                    IExpression expr = new VariableExpression(name);
-
-                    if (token != null)
-                        this.PushToken(token);
-
-                    return expr;
-
-                case TokenType.String:
-                    if (token.Value.Contains('$'))
-                        return ParseStringInterpolation(token.Value);
-
-                    return new ConstantExpression(token.Value);
-
-                case TokenType.Separator:
-                    if (token.Value == "(")
-                    {
-                        var result = this.ParseExpression();
-                        this.ParseToken(")", TokenType.Separator);
-                        return result;
-                    }
-
-                    if (token.Value == "[")
-                    {
-                        var result = this.ParseExpressionList("]");
-                        return new ArrayExpression(result);
-                    }
-
-                    break;
-            }
-
-            throw new ParserException(string.Format("Unexpected '{0}'", token.Value));
         }
 
         public IList<ICommand> ParseCommands()
@@ -256,7 +92,7 @@
 
             token = this.NextToken();
 
-            if (token != null && token.Type == TokenType.Name && IsTypeExpression(expression))
+            if (token != null && token.Type == TokenType.Name && this.IsTypeExpression(expression))
             {
                 if (this.TryPeekToken("(", TokenType.Separator))
                     return this.ParseDefineFunction(token.Value);
@@ -281,7 +117,171 @@
             if (token == null || token.Type != TokenType.Separator || token.Value != ";")
                 throw new ParserException("Expected ';'");
 
-            return command;;
+            return command;
+        }
+
+        public IExpression ParseExpression()
+        {
+            var expression = this.ParseBinaryExpressionLevelMultiply();
+
+            if (expression == null)
+                return null;
+
+            Token token = this.NextToken();
+
+            if (token == null)
+                return expression;
+
+            if (token.Type == TokenType.Operator)
+            {
+                if (token.Value == "==")
+                    return new CompareExpression(ComparisonOperator.Equal, expression, this.ParseExpression());
+                if (token.Value == "<")
+                    return new CompareExpression(ComparisonOperator.Less, expression, this.ParseExpression());
+                if (token.Value == ">")
+                    return new CompareExpression(ComparisonOperator.Greater, expression, this.ParseExpression());
+                if (token.Value == "<=")
+                    return new CompareExpression(ComparisonOperator.LessEqual, expression, this.ParseExpression());
+                if (token.Value == ">=")
+                    return new CompareExpression(ComparisonOperator.GreaterEqual, expression, this.ParseExpression());
+            }
+
+            this.PushToken(token);
+
+            return expression;
+        }
+
+        private IExpression ParseBinaryExpressionLevelMultiply()
+        {
+            IExpression expression = this.ParseBinaryExpressionLevelAdd();
+
+            if (expression == null)
+                return null;
+
+            Token token = this.NextToken();
+
+            while (token != null && token.Type == TokenType.Operator && (token.Value == "*" || token.Value == "/"))
+            {
+                ArithmeticOperator oper = token.Value == "*" ? ArithmeticOperator.Multiply : ArithmeticOperator.Divide;
+                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseBinaryExpressionLevelAdd());
+                token = this.NextToken();
+            }
+
+            if (token != null)
+                this.PushToken(token);
+
+            return expression;
+        }
+
+        private IExpression ParseBinaryExpressionLevelAdd()
+        {
+            IExpression expression = this.ParseDotExpression();
+
+            if (expression == null)
+                return null;
+
+            Token token = this.NextToken();
+
+            while (token != null && token.Type == TokenType.Operator && (token.Value == "+" || token.Value == "-"))
+            {
+                ArithmeticOperator oper = token.Value == "+" ? ArithmeticOperator.Add : ArithmeticOperator.Subtract;
+                expression = new ArithmeticBinaryExpression(oper, expression, this.ParseDotExpression());
+                token = this.NextToken();
+            }
+
+            if (token != null)
+                this.PushToken(token);
+
+            return expression;
+        }
+
+        private IExpression ParseDotExpression()
+        {
+            IExpression expression = this.ParseSimpleExpression();
+
+            if (expression == null)
+                return null;
+
+            while (this.TryParseToken(".", TokenType.Separator))
+            {
+                string name = this.ParseName();
+                if (this.TryParseToken("(", TokenType.Separator))
+                {
+                    expression = new DotExpression(expression, name, this.ParseExpressionList(")"));
+                }
+                else
+                    expression = new DotExpression(expression, name);
+            }
+
+            return expression;
+        }
+
+        private IExpression ParseSimpleExpression()
+        {
+            Token token = this.NextToken();
+
+            if (token == null)
+                return null;
+
+            if (token.Type == TokenType.Separator && (token.Value == "}" || token.Value == ")"))
+            {
+                this.PushToken(token);
+                return null;
+            }
+
+            switch (token.Type)
+            {
+                case TokenType.Integer:
+                    return new ConstantExpression(int.Parse(token.Value, CultureInfo.InvariantCulture));
+                
+                case TokenType.Name:
+                    string name = token.Value;
+
+                    if (name == "null")
+                        return new ConstantExpression(null);
+                    if (name == "true")
+                        return new ConstantExpression(true);
+                    if (name == "false")
+                        return new ConstantExpression(false);
+
+                    token = this.NextToken();
+
+                    if (token != null && token.Type == TokenType.Separator && token.Type == TokenType.Separator && token.Value == "(")
+                    {
+                        return new CallExpression(new VariableExpression(name), this.ParseExpressionList(")"));
+                    }
+
+                    IExpression expr = new VariableExpression(name);
+
+                    if (token != null)
+                        this.PushToken(token);
+
+                    return expr;
+
+                case TokenType.String:
+                    if (token.Value.Contains('$'))
+                        return this.ParseStringInterpolation(token.Value);
+
+                    return new ConstantExpression(token.Value);
+
+                case TokenType.Separator:
+                    if (token.Value == "(")
+                    {
+                        var result = this.ParseExpression();
+                        this.ParseToken(")", TokenType.Separator);
+                        return result;
+                    }
+
+                    if (token.Value == "[")
+                    {
+                        var result = this.ParseExpressionList("]");
+                        return new ArrayExpression(result);
+                    }
+
+                    break;
+            }
+
+            throw new ParserException(string.Format("Unexpected '{0}'", token.Value));
         }
 
         private IExpression ParseStringInterpolation(string text)
@@ -367,7 +367,7 @@
             if (this.TryParseToken("=", TokenType.Operator))
                 command = new DefineVariableCommand(typeexpression, name, this.ParseExpression());
             else
-                command =  new DefineVariableCommand(typeexpression, name);
+                command = new DefineVariableCommand(typeexpression, name);
 
             this.ParseToken(";", TokenType.Separator);
 
@@ -493,7 +493,7 @@
 
         private Token NextToken()
         {
-            if (this.tokens.Count>0)
+            if (this.tokens.Count > 0)
                 return this.tokens.Pop();
 
             return this.lexer.NextToken();

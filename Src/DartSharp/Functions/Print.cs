@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using DartSharp.Language;
-    using System.IO;
 
     public class Print : ICallable
     {
@@ -19,13 +19,13 @@
         public object Call(Context context, IList<object> arguments)
         {
             if (arguments == null || arguments.Count == 0)
-                writer.WriteLine();
+                this.writer.WriteLine();
             else if (arguments.Count > 1)
                 throw new InvalidOperationException("print accepts only one argument");
             else
-                writer.WriteLine(arguments[0]);
+                this.writer.WriteLine(arguments[0]);
 
-            writer.Flush();
+            this.writer.Flush();
 
             return null;
         }

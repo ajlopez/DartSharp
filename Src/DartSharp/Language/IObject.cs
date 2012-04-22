@@ -7,14 +7,14 @@
 
     public interface IObject
     {
+        IClass Class { get; }
+
         object GetValue(string name);
 
         void SetValue(string name, object value);
 
-        ICollection<string> GetNames();
+        IEnumerable<string> GetNames();
 
         object Invoke(string name, object[] parameters);
-
-        object Invoke(ICallable method, object[] parameters);
     }
 }

@@ -11,11 +11,11 @@
     {
         private static NullCommand instance = new NullCommand();
 
-        public static NullCommand Instance { get { return instance; } } 
-
         private NullCommand()
         {
         }
+
+        public static NullCommand Instance { get { return instance; } }
 
         public object Execute(Context context)
         {

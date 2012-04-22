@@ -18,7 +18,7 @@
                 return false;
 
             if (obj is bool)
-                return (bool) obj == true;
+                return (bool)obj == true;
 
             return false;
         }

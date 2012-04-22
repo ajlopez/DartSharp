@@ -21,8 +21,8 @@
         {
             IList<object> values = new List<object>();
 
-            if (expressions != null)
-                foreach (var argument in expressions)
+            if (this.expressions != null)
+                foreach (var argument in this.expressions)
                     values.Add(argument.Evaluate(context));
 
             return values;

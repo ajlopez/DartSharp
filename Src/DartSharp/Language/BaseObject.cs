@@ -12,6 +12,9 @@
 
         public BaseObject(IClass @class)
         {
+            if (@class == null)
+                throw new ArgumentNullException("class");
+
             this.@class = @class;
         }
 
@@ -22,6 +25,9 @@
 
         public object GetValue(string name)
         {
+            if (this.@class.GetVariableType(name) == null)
+                throw new InvalidOperationException(string.Format("Undefined Variable '{0}'", name));
+
             if (this.values == null || !this.values.ContainsKey(name))
                 return null;
 
@@ -30,14 +36,12 @@
 
         public void SetValue(string name, object value)
         {
+            if (this.@class.GetVariableType(name) == null)
+                throw new InvalidOperationException(string.Format("Undefined Variable '{0}'", name));
+
             if (this.values == null)
                 this.values = new Dictionary<string, object>();
             this.values[name] = value;
-        }
-
-        public IEnumerable<string> GetNames()
-        {
-            throw new NotImplementedException();
         }
 
         public object Invoke(string name, object[] parameters)

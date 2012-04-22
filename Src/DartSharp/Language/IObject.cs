@@ -13,8 +13,6 @@
 
         void SetValue(string name, object value);
 
-        IEnumerable<string> GetNames();
-
         object Invoke(string name, object[] parameters);
     }
 }

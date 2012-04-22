@@ -61,7 +61,9 @@
     <Compile Include="Expressions\DotExpressionTests.cs" />
     <Compile Include="Expressions\VariableExpressionTests.cs" />
     <Compile Include="Functions\PrintTests.cs" />
+    <Compile Include="Language\BaseClassTests.cs" />
     <Compile Include="Language\BaseObjectTests.cs" />
+    <Compile Include="Language\FuncMethodTests.cs" />
     <Compile Include="Language\PredicateTests.cs" />
     <Compile Include="ObjectUtilitiesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

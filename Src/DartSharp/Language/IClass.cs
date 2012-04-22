@@ -5,16 +5,10 @@
     using System.Linq;
     using System.Text;
 
-    public interface IClass
+    public interface IClass : IType
     {
-        IClass Superclass { get; }
-
-        void DefineVariable(string name, IClass type);
+        void DefineVariable(string name, IType type);
 
         void DefineMethod(string name, IMethod method);
-
-        IClass GetVariableType(string name);
-
-        IMethod GetMethod(string name);
     }
 }

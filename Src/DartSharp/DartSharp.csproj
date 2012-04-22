@@ -77,8 +77,11 @@
     <Compile Include="Expressions\IExpression.cs" />
     <Compile Include="Expressions\VariableExpression.cs" />
     <Compile Include="Functions\DefinedFunction.cs" />
+    <Compile Include="Language\BaseClass.cs" />
     <Compile Include="Language\BaseObject.cs" />
     <Compile Include="Language\ComparisonOperator.cs" />
+    <Compile Include="Language\IType.cs" />
+    <Compile Include="Language\FuncMethod.cs" />
     <Compile Include="Language\IMethod.cs" />
     <Compile Include="Language\ICallable.cs" />
     <Compile Include="Language\IObject.cs" />

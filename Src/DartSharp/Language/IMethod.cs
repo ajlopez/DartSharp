@@ -7,8 +7,8 @@
 
     public interface IMethod
     {
-        IClass Type { get; }
+        IType Type { get; }
 
-        object Call(object self, Context context, IList<object> arguments);
+        object Call(object self, Context context, object[] arguments);
     }
 }
